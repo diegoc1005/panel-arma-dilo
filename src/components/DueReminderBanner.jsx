@@ -93,7 +93,7 @@ export function DueReminderBanner({ tasks, currentUser, onNavigate }) {
 
       <div className="flex items-center gap-2 shrink-0">
         <button
-          onClick={() => onNavigate('tasks')}
+          onClick={() => onNavigate('tasks', 'me')}
           className={`flex items-center gap-1 font-semibold px-2.5 py-1 rounded-lg transition-colors text-xs ${
             hasOverdue
               ? 'bg-red-600 hover:bg-red-700 text-white'

@@ -38,6 +38,7 @@ export default function App() {
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [showSearch, setShowSearch] = useState(false)
+  const [taskFilter, setTaskFilter] = useState('all')
   const menuRef = useRef(null)
 
   // Hooks de utilidad
@@ -234,7 +235,10 @@ export default function App() {
         <DueReminderBanner
           tasks={tasks}
           currentUser={currentUser}
-          onNavigate={(p) => setPage(p)}
+          onNavigate={(p, filter) => {
+            setPage(p)
+            if (filter) setTaskFilter(filter)
+          }}
         />
 
         {/* Page content */}
@@ -245,8 +249,17 @@ export default function App() {
               onUpdate={updateTask} onAdd={addTask} onComment={addComment} />
           )}
           {page === 'tasks'    && (
-            <TaskList tasks={tasks} history={history} currentUser={currentUser}
-              onUpdate={updateTask} onAdd={addTask} onDelete={deleteTask} onComment={addComment} />
+            <TaskList
+              key={`${currentUser}-${taskFilter}`}
+              tasks={tasks}
+              history={history}
+              currentUser={currentUser}
+              defaultFilterMember={taskFilter}
+              onUpdate={updateTask}
+              onAdd={addTask}
+              onDelete={deleteTask}
+              onComment={addComment}
+            />
           )}
           {page === 'timeline' && <Timeline tasks={tasks} />}
           {page === 'history'  && <History history={history} tasks={tasks} />}

@@ -8,9 +8,9 @@ import { AddTaskModal } from '../components/AddTaskModal'
 import { format, parseISO, isPast, isToday } from 'date-fns'
 import { es } from 'date-fns/locale'
 
-export function TaskList({ tasks, history, currentUser, onUpdate, onAdd, onDelete, onComment }) {
+export function TaskList({ tasks, history, currentUser, onUpdate, onAdd, onDelete, onComment, defaultFilterMember = 'all' }) {
   const [search, setSearch] = useState('')
-  const [filterMember, setFilterMember] = useState('all')
+  const [filterMember, setFilterMember] = useState(defaultFilterMember)
   const [filterStatus, setFilterStatus] = useState('all')
   const [filterPriority, setFilterPriority] = useState('all')
   const [selectedTask, setSelectedTask] = useState(null)
@@ -21,7 +21,13 @@ export function TaskList({ tasks, history, currentUser, onUpdate, onAdd, onDelet
   const filtered = useMemo(() => {
     let result = tasks
     if (search) result = result.filter((t) => t.title.toLowerCase().includes(search.toLowerCase()))
-    if (filterMember !== 'all') result = result.filter((t) => t.assignee_id === Number(filterMember))
+    if (filterMember !== 'all') {
+      if (filterMember === 'me') {
+        result = result.filter((t) => t.assignee_id === currentUser)
+      } else {
+        result = result.filter((t) => t.assignee_id === Number(filterMember))
+      }
+    }
     if (filterStatus !== 'all') result = result.filter((t) => t.status === filterStatus)
     if (filterPriority !== 'all') result = result.filter((t) => t.priority === filterPriority)
     return [...result].sort((a, b) => {
@@ -117,12 +123,35 @@ export function TaskList({ tasks, history, currentUser, onUpdate, onAdd, onDelet
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
+        <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-xl">
+          <button
+            onClick={() => setFilterMember('all')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              filterMember === 'all'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-500 hover:text-gray-900'
+            }`}
+          >
+            Todos
+          </button>
+          <button
+            onClick={() => setFilterMember('me')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              filterMember === 'me'
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'text-gray-500 hover:text-gray-900'
+            }`}
+          >
+            Mis tareas
+          </button>
+        </div>
         <select
           className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
           value={filterMember}
           onChange={(e) => setFilterMember(e.target.value)}
         >
           <option value="all">Todos los miembros</option>
+          <option value="me">👤 Mis tareas</option>
           {TEAM_MEMBERS.map((m) => (
             <option key={m.id} value={m.id}>{m.name.split(' ').slice(0, 2).join(' ')}</option>
           ))}
