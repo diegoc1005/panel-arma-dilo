@@ -18,6 +18,7 @@ import { Timeline } from './pages/Timeline'
 import { Notes } from './pages/Notes'
 import { GlobalSearch } from './components/GlobalSearch'
 import { DueReminderBanner } from './components/DueReminderBanner'
+import { ErrorBoundary } from './components/ErrorBoundary'
 
 const NAV_ITEMS = [
   { key: 'dashboard', label: 'Dashboard',  icon: LayoutDashboard },
@@ -31,7 +32,7 @@ const NAV_ITEMS = [
 
 export default function App() {
   const { tasks, history, loading, updateTask, addTask, deleteTask, addComment } = useTasks()
-  const { notes } = useNotes()
+  const { notes, addNote, updateNote, deleteNote, togglePin } = useNotes()
   const [dark, setDark] = useDarkMode()
   const [page, setPage] = useState('dashboard')
   const [currentUser, setCurrentUser] = useState(1)
@@ -243,28 +244,39 @@ export default function App() {
 
         {/* Page content */}
         <main className="flex-1 p-4 lg:p-8 overflow-auto">
-          {page === 'dashboard' && <Dashboard tasks={tasks} history={history} />}
-          {page === 'kanban'    && (
-            <Kanban tasks={tasks} history={history} currentUser={currentUser}
-              onUpdate={updateTask} onAdd={addTask} onComment={addComment} />
-          )}
-          {page === 'tasks'    && (
-            <TaskList
-              key={`${currentUser}-${taskFilter}`}
-              tasks={tasks}
-              history={history}
-              currentUser={currentUser}
-              defaultFilterMember={taskFilter}
-              onUpdate={updateTask}
-              onAdd={addTask}
-              onDelete={deleteTask}
-              onComment={addComment}
-            />
-          )}
-          {page === 'timeline' && <Timeline tasks={tasks} />}
-          {page === 'history'  && <History history={history} tasks={tasks} />}
-          {page === 'team'     && <Team tasks={tasks} />}
-          {page === 'notes'    && <Notes currentUser={currentUser} />}
+          <ErrorBoundary key={page}>
+            {page === 'dashboard' && <Dashboard tasks={tasks} history={history} />}
+            {page === 'kanban'    && (
+              <Kanban tasks={tasks} history={history} currentUser={currentUser}
+                onUpdate={updateTask} onAdd={addTask} onComment={addComment} />
+            )}
+            {page === 'tasks'    && (
+              <TaskList
+                key={`${currentUser}-${taskFilter}`}
+                tasks={tasks}
+                history={history}
+                currentUser={currentUser}
+                defaultFilterMember={taskFilter}
+                onUpdate={updateTask}
+                onAdd={addTask}
+                onDelete={deleteTask}
+                onComment={addComment}
+              />
+            )}
+            {page === 'timeline' && <Timeline tasks={tasks} />}
+            {page === 'history'  && <History history={history} tasks={tasks} />}
+            {page === 'team'     && <Team tasks={tasks} />}
+            {page === 'notes'    && (
+              <Notes
+                notes={notes}
+                currentUser={currentUser}
+                onAdd={addNote}
+                onUpdate={updateNote}
+                onDelete={deleteNote}
+                onTogglePin={togglePin}
+              />
+            )}
+          </ErrorBoundary>
         </main>
       </div>
 

@@ -1,36 +1,51 @@
 import { useState } from 'react'
 import { Pin, Trash2, Plus, Edit2, Check, X } from 'lucide-react'
-import { useNotes } from '../hooks/useNotes'
+import { useNotes as useNotesHook } from '../hooks/useNotes'
 import { TEAM_MEMBERS } from '../data/initialData'
 import { Avatar } from '../components/Avatar'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 
-export function Notes({ currentUser }) {
-  const { notes, addNote, updateNote, deleteNote, togglePin } = useNotes()
+export function Notes({
+  currentUser,
+  notes: propNotes,
+  onAdd: propAdd,
+  onUpdate: propUpdate,
+  onDelete: propDelete,
+  onTogglePin: propTogglePin,
+}) {
+  // Si no se reciben por props, usamos el hook local
+  const localNotes = useNotesHook()
+  const notes = propNotes ?? localNotes.notes ?? []
+  const addNote = propAdd ?? localNotes.addNote
+  const updateNote = propUpdate ?? localNotes.updateNote
+  const deleteNote = propDelete ?? localNotes.deleteNote
+  const togglePin = propTogglePin ?? localNotes.togglePin
+
   const [newText, setNewText] = useState('')
   const [editingId, setEditingId] = useState(null)
   const [editText, setEditText] = useState('')
 
   const handleAdd = async () => {
-    if (!newText.trim()) return
+    if (!newText.trim() || !addNote) return
     await addNote(newText.trim(), currentUser)
     setNewText('')
   }
 
   const startEdit = (note) => {
     setEditingId(note.id)
-    setEditText(note.content)
+    setEditText(note.content || '')
   }
 
   const saveEdit = async (id) => {
-    if (!editText.trim()) return
+    if (!editText.trim() || !updateNote) return
     await updateNote(id, { content: editText.trim() })
     setEditingId(null)
   }
 
-  const pinned = notes.filter((n) => n.pinned)
-  const unpinned = notes.filter((n) => !n.pinned)
+  const safeNotes = Array.isArray(notes) ? notes : []
+  const pinned = safeNotes.filter((n) => n?.pinned)
+  const unpinned = safeNotes.filter((n) => !n?.pinned)
 
   return (
     <div className="space-y-5">
@@ -49,13 +64,18 @@ export function Notes({ currentUser }) {
           placeholder="Escribe una nota, decisión, link o acuerdo del equipo... (Enter para nueva línea, Ctrl+Enter para guardar)"
           value={newText}
           onChange={(e) => setNewText(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter' && e.ctrlKey) handleAdd() }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+              e.preventDefault()
+              handleAdd()
+            }
+          }}
         />
         <div className="flex justify-end mt-2">
           <button
             onClick={handleAdd}
             disabled={!newText.trim()}
-            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-200 disabled:text-gray-400 text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors"
+            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-200 dark:disabled:bg-gray-700 disabled:text-gray-400 text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors cursor-pointer disabled:cursor-not-allowed"
           >
             <Plus size={15} />
             Agregar nota
@@ -63,10 +83,10 @@ export function Notes({ currentUser }) {
         </div>
       </div>
 
-      {notes.length === 0 && (
+      {safeNotes.length === 0 && (
         <div className="text-center py-16 text-gray-400">
           <p className="text-lg">📝</p>
-          <p className="text-sm mt-2">Sin notas aún. ¡Agrega la primera!</p>
+          <p className="text-sm mt-2">Sin notas aún. ¡Agrega la primera para el equipo!</p>
         </div>
       )}
 
@@ -88,8 +108,8 @@ export function Notes({ currentUser }) {
                 onStartEdit={() => startEdit(note)}
                 onSaveEdit={() => saveEdit(note.id)}
                 onCancelEdit={() => setEditingId(null)}
-                onDelete={() => deleteNote(note.id)}
-                onTogglePin={() => togglePin(note)}
+                onDelete={() => deleteNote?.(note.id)}
+                onTogglePin={() => togglePin?.(note)}
               />
             ))}
           </div>
@@ -114,8 +134,8 @@ export function Notes({ currentUser }) {
                 onStartEdit={() => startEdit(note)}
                 onSaveEdit={() => saveEdit(note.id)}
                 onCancelEdit={() => setEditingId(null)}
-                onDelete={() => deleteNote(note.id)}
-                onTogglePin={() => togglePin(note)}
+                onDelete={() => deleteNote?.(note.id)}
+                onTogglePin={() => togglePin?.(note)}
               />
             ))}
           </div>
@@ -125,16 +145,38 @@ export function Notes({ currentUser }) {
   )
 }
 
-function NoteCard({ note, currentUser, editing, editText, onEditText,
-                    onStartEdit, onSaveEdit, onCancelEdit, onDelete, onTogglePin }) {
+function NoteCard({
+  note,
+  currentUser,
+  editing,
+  editText,
+  onEditText,
+  onStartEdit,
+  onSaveEdit,
+  onCancelEdit,
+  onDelete,
+  onTogglePin,
+}) {
   const author = TEAM_MEMBERS.find((m) => m.id === note.author_id)
-  const isOwn  = note.author_id === currentUser
+  const isOwn = note.author_id === currentUser
+  const authorName = author?.name ? author.name.split(' ').slice(0, 2).join(' ') : 'Equipo'
+
+  let dateStr = ''
+  if (note.created_at) {
+    try {
+      dateStr = format(new Date(note.created_at), "d MMM HH:mm", { locale: es })
+    } catch {
+      dateStr = ''
+    }
+  }
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-2xl border shadow-sm p-4 transition-all
-      ${note.pinned
-        ? 'border-amber-200 dark:border-amber-700 bg-amber-50/40 dark:bg-amber-900/10'
-        : 'border-gray-100 dark:border-gray-700'}`}
+    <div
+      className={`bg-white dark:bg-gray-800 rounded-2xl border shadow-sm p-4 transition-all ${
+        note.pinned
+          ? 'border-amber-200 dark:border-amber-700 bg-amber-50/40 dark:bg-amber-900/10'
+          : 'border-gray-100 dark:border-gray-700'
+      }`}
     >
       {editing ? (
         <div className="space-y-2">
@@ -146,12 +188,16 @@ function NoteCard({ note, currentUser, editing, editText, onEditText,
             onChange={(e) => onEditText(e.target.value)}
           />
           <div className="flex gap-2 justify-end">
-            <button onClick={onSaveEdit}
-              className="flex items-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium px-3 py-1.5 rounded-lg">
+            <button
+              onClick={onSaveEdit}
+              className="flex items-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium px-3 py-1.5 rounded-lg"
+            >
               <Check size={13} /> Guardar
             </button>
-            <button onClick={onCancelEdit}
-              className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 text-xs font-medium px-3 py-1.5 rounded-lg">
+            <button
+              onClick={onCancelEdit}
+              className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 text-xs font-medium px-3 py-1.5 rounded-lg"
+            >
               <X size={13} /> Cancelar
             </button>
           </div>
@@ -166,25 +212,31 @@ function NoteCard({ note, currentUser, editing, editText, onEditText,
               <Avatar memberId={note.author_id} size="sm" />
               <div>
                 <p className="text-xs font-medium text-gray-600 dark:text-gray-300">
-                  {author?.name.split(' ').slice(0, 2).join(' ')}
+                  {authorName}
                 </p>
-                <p className="text-xs text-gray-400">
-                  {format(new Date(note.created_at), "d MMM HH:mm", { locale: es })}
-                </p>
+                {dateStr && (
+                  <p className="text-xs text-gray-400">
+                    {dateStr}
+                  </p>
+                )}
               </div>
             </div>
             <div className="flex items-center gap-1">
               <button
                 onClick={onTogglePin}
                 title={note.pinned ? 'Desfijar' : 'Fijar nota'}
-                className={`p-1.5 rounded-lg transition-colors ${note.pinned ? 'text-amber-500 bg-amber-50 dark:bg-amber-900/30' : 'text-gray-400 hover:text-amber-500 hover:bg-amber-50'}`}
+                className={`p-1.5 rounded-lg transition-colors ${
+                  note.pinned
+                    ? 'text-amber-500 bg-amber-50 dark:bg-amber-900/30'
+                    : 'text-gray-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-gray-700'
+                }`}
               >
                 <Pin size={14} />
               </button>
               {isOwn && (
                 <button
                   onClick={onStartEdit}
-                  className="p-1.5 rounded-lg text-gray-400 hover:text-indigo-500 hover:bg-indigo-50 transition-colors"
+                  className="p-1.5 rounded-lg text-gray-400 hover:text-indigo-500 hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   <Edit2 size={14} />
                 </button>
@@ -192,7 +244,7 @@ function NoteCard({ note, currentUser, editing, editText, onEditText,
               {isOwn && (
                 <button
                   onClick={onDelete}
-                  className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                  className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   <Trash2 size={14} />
                 </button>
