@@ -13,14 +13,14 @@ const DEADLINE = new Date('2026-12-05')
 
 function StatCard({ icon: Icon, label, value, color, sub }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-5 flex items-center gap-4 shadow-sm">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 flex items-center gap-4 shadow-sm">
       <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color}`}>
         <Icon size={22} className="text-white" />
       </div>
       <div>
-        <p className="text-2xl font-bold text-gray-900">{value}</p>
-        <p className="text-sm text-gray-500">{label}</p>
-        {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+        <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
+        {sub && <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{sub}</p>}
       </div>
     </div>
   )
@@ -148,20 +148,20 @@ export function Dashboard({ tasks, history }) {
       {/* Header con countdown al deadline */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-500 text-sm mt-1">Sistema de Gestión de Pago de Honorarios — Equipo Arma-dilo</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Sistema de Gestión de Pago de Honorarios — Equipo Arma-dilo</p>
         </div>
         <div className={`text-center px-5 py-3 rounded-2xl border-2 ${
-          daysToDeadline <= 7 ? 'border-red-200 bg-red-50' :
-          daysToDeadline <= 14 ? 'border-amber-200 bg-amber-50' :
-          'border-indigo-100 bg-indigo-50'
+          daysToDeadline <= 7 ? 'border-red-200 dark:border-red-900/60 bg-red-50 dark:bg-red-950/40' :
+          daysToDeadline <= 14 ? 'border-amber-200 dark:border-amber-900/60 bg-amber-50 dark:bg-amber-950/40' :
+          'border-indigo-100 dark:border-indigo-900/60 bg-indigo-50 dark:bg-indigo-950/40'
         }`}>
           <p className={`text-3xl font-black ${
-            daysToDeadline <= 7 ? 'text-red-600' :
-            daysToDeadline <= 14 ? 'text-amber-600' : 'text-indigo-600'
+            daysToDeadline <= 7 ? 'text-red-600 dark:text-red-400' :
+            daysToDeadline <= 14 ? 'text-amber-600 dark:text-amber-400' : 'text-indigo-600 dark:text-indigo-400'
           }`}>{daysToDeadline}</p>
-          <p className="text-xs font-medium text-gray-500">días al deadline</p>
-          <p className="text-xs text-gray-400">5 Dic 2026</p>
+          <p className="text-xs font-medium text-gray-500 dark:text-gray-400">días al deadline</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500">5 Dic 2026</p>
         </div>
       </div>
 
@@ -175,20 +175,20 @@ export function Dashboard({ tasks, history }) {
 
       {/* ⚠️ Alerta de tareas urgentes */}
       {urgentTasks.length > 0 && (
-        <div className="bg-red-50 border border-red-200 rounded-2xl p-5">
+        <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded-2xl p-5">
           <div className="flex items-center gap-2 mb-4">
             <Flame size={18} className="text-red-500" />
-            <h2 className="font-bold text-red-700">Atención requerida — {urgentTasks.length} tarea{urgentTasks.length > 1 ? 's' : ''} urgente{urgentTasks.length > 1 ? 's' : ''}</h2>
+            <h2 className="font-bold text-red-700 dark:text-red-400">Atención requerida — {urgentTasks.length} tarea{urgentTasks.length > 1 ? 's' : ''} urgente{urgentTasks.length > 1 ? 's' : ''}</h2>
           </div>
           <div className="space-y-2">
             {urgentTasks.map((task) => {
               const member = TEAM_MEMBERS.find((m) => m.id === task.assignee_id)
               return (
-                <div key={task.id} className="flex items-center gap-3 bg-white rounded-xl px-4 py-2.5 border border-red-100">
+                <div key={task.id} className="flex items-center gap-3 bg-white dark:bg-gray-800 rounded-xl px-4 py-2.5 border border-red-100 dark:border-red-900/40">
                   <Avatar memberId={task.assignee_id} size="sm" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-800 truncate">{task.title}</p>
-                    <p className="text-xs text-gray-500">{member?.name.split(' ')[0]} · {member?.role}</p>
+                    <p className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">{task.title}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{member?.name.split(' ')[0]} · {member?.role}</p>
                   </div>
                   <DaysChip dueDate={task.due_date} status={task.status} />
                 </div>
@@ -199,41 +199,41 @@ export function Dashboard({ tasks, history }) {
       )}
 
       {/* Progress bar general */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <TrendingUp size={18} className="text-indigo-500" />
-            <h2 className="font-semibold text-gray-800">Avance general del proyecto</h2>
+            <h2 className="font-semibold text-gray-800 dark:text-white">Avance general del proyecto</h2>
           </div>
-          <span className="text-2xl font-bold text-indigo-600">{stats.progress}%</span>
+          <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{stats.progress}%</span>
         </div>
-        <div className="w-full bg-gray-100 rounded-full h-4">
+        <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-4">
           <div
             className="bg-gradient-to-r from-indigo-500 to-indigo-400 h-4 rounded-full transition-all duration-700"
             style={{ width: `${stats.progress}%` }}
           />
         </div>
-        <div className="flex justify-between text-xs text-gray-400 mt-2">
+        <div className="flex justify-between text-xs text-gray-400 dark:text-gray-500 mt-2">
           <span>{stats.done} tareas completadas</span>
           <span>{stats.total - stats.done} restantes</span>
         </div>
       </div>
 
       {/* Avance por categoría */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
         <div className="flex items-center gap-2 mb-5">
           <Tag size={18} className="text-indigo-500" />
-          <h2 className="font-semibold text-gray-800">Avance por entregable</h2>
+          <h2 className="font-semibold text-gray-800 dark:text-white">Avance por entregable</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {categoryStats.map((cat, i) => (
             <div key={cat.name} className="flex items-center gap-3">
               <div className="w-28 shrink-0">
-                <p className="text-xs font-medium text-gray-700 truncate">{cat.name}</p>
-                <p className="text-xs text-gray-400">{cat.done}/{cat.total}</p>
+                <p className="text-xs font-medium text-gray-700 dark:text-gray-300 truncate">{cat.name}</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">{cat.done}/{cat.total}</p>
               </div>
               <div className="flex-1">
-                <div className="w-full bg-gray-100 rounded-full h-2">
+                <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2">
                   <div
                     className="h-2 rounded-full transition-all duration-700"
                     style={{
@@ -243,17 +243,17 @@ export function Dashboard({ tasks, history }) {
                   />
                 </div>
               </div>
-              <span className="text-xs font-bold text-gray-500 w-8 text-right">{cat.pct}%</span>
+              <span className="text-xs font-bold text-gray-500 dark:text-gray-400 w-8 text-right">{cat.pct}%</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Progreso por integrante */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
         <div className="flex items-center gap-2 mb-5">
           <Users size={18} className="text-indigo-500" />
-          <h2 className="font-semibold text-gray-800">Progreso por integrante</h2>
+          <h2 className="font-semibold text-gray-800 dark:text-white">Progreso por integrante</h2>
         </div>
         <div className="space-y-4">
           {memberStats.map((m) => (
@@ -262,13 +262,13 @@ export function Dashboard({ tasks, history }) {
                 <div className="flex items-center gap-2">
                   <Avatar memberId={m.id} size="sm" />
                   <div>
-                    <span className="text-sm font-medium text-gray-800">{m.name.split(' ').slice(0, 2).join(' ')}</span>
-                    <span className="text-xs text-gray-400 ml-2">{m.role}</span>
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{m.name.split(' ').slice(0, 2).join(' ')}</span>
+                    <span className="text-xs text-gray-400 dark:text-gray-500 ml-2">{m.role}</span>
                   </div>
                 </div>
-                <span className="text-sm font-semibold text-gray-700">{m.done}/{m.total}</span>
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{m.done}/{m.total}</span>
               </div>
-              <div className="w-full bg-gray-100 rounded-full h-2">
+              <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2">
                 <div
                   className="h-2 rounded-full transition-all duration-700"
                   style={{ width: `${m.pct}%`, backgroundColor: m.color }}

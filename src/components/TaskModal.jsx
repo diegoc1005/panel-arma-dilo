@@ -74,35 +74,35 @@ export function TaskModal({ task, currentUser, taskHistory = [], onClose, onUpda
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col border border-gray-100 dark:border-gray-700">
         {/* Header */}
-        <div className="flex items-start justify-between p-6 border-b border-gray-100 shrink-0">
+        <div className="flex items-start justify-between p-6 border-b border-gray-100 dark:border-gray-700 shrink-0">
           <div className="flex-1 mr-4">
             {editing ? (
               <input
-                className="w-full text-xl font-bold text-gray-900 border-b-2 border-indigo-400 focus:outline-none pb-1"
+                className="w-full text-xl font-bold text-gray-900 dark:text-white bg-transparent border-b-2 border-indigo-400 focus:outline-none pb-1"
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
               />
             ) : (
-              <h2 className="text-xl font-bold text-gray-900">{task.title}</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{task.title}</h2>
             )}
             {/* Days chip under title */}
             <div className="mt-1.5">
               <DaysChip dueDate={task.due_date} status={task.status} />
             </div>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-700 transition-colors">
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
             <X size={22} />
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-gray-100 px-6 shrink-0">
+        <div className="flex border-b border-gray-100 dark:border-gray-700 px-6 shrink-0">
           <button
             onClick={() => setTab('detail')}
             className={`py-3 px-4 text-sm font-medium border-b-2 transition-colors ${
-              tab === 'detail' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700'
+              tab === 'detail' ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
             }`}
           >
             Detalle
@@ -110,13 +110,13 @@ export function TaskModal({ task, currentUser, taskHistory = [], onClose, onUpda
           <button
             onClick={() => setTab('history')}
             className={`py-3 px-4 text-sm font-medium border-b-2 transition-colors flex items-center gap-1.5 ${
-              tab === 'history' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700'
+              tab === 'history' ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
             }`}
           >
             <Clock size={14} />
             Historial
             {taskHistory.length > 0 && (
-              <span className="bg-gray-100 text-gray-600 text-xs px-1.5 py-0.5 rounded-full">{taskHistory.length}</span>
+              <span className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs px-1.5 py-0.5 rounded-full">{taskHistory.length}</span>
             )}
           </button>
         </div>
@@ -173,17 +173,17 @@ export function TaskModal({ task, currentUser, taskHistory = [], onClose, onUpda
               </div>
 
               {/* Details grid */}
-              <div className="grid grid-cols-2 gap-4 bg-gray-50 rounded-xl p-4">
+              <div className="grid grid-cols-2 gap-4 bg-gray-50 dark:bg-gray-750 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-100 dark:border-gray-700">
                 <div className="flex items-center gap-2 text-sm">
                   <User size={15} className="text-gray-400" />
-                  <span className="text-gray-500">Responsable:</span>
+                  <span className="text-gray-500 dark:text-gray-400">Responsable:</span>
                   <Avatar memberId={task.assignee_id} size="sm" />
-                  <span className="text-gray-700 font-medium text-xs">{assignee?.name.split(' ')[0]}</span>
+                  <span className="text-gray-700 dark:text-gray-200 font-medium text-xs">{assignee?.name.split(' ')[0]}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Calendar size={15} className="text-gray-400" />
-                  <span className="text-gray-500">Límite:</span>
-                  <span className="text-gray-700 font-medium">
+                  <span className="text-gray-500 dark:text-gray-400">Límite:</span>
+                  <span className="text-gray-700 dark:text-gray-200 font-medium">
                     {task.due_date
                       ? format(parseISO(task.due_date), "d 'de' MMM", { locale: es })
                       : 'Sin fecha'}
@@ -191,34 +191,34 @@ export function TaskModal({ task, currentUser, taskHistory = [], onClose, onUpda
                 </div>
                 <div className="flex items-center gap-2 text-sm col-span-2">
                   <Tag size={15} className="text-gray-400" />
-                  <span className="text-gray-500">Categoría:</span>
-                  <span className="text-gray-700 font-medium">{task.category}</span>
+                  <span className="text-gray-500 dark:text-gray-400">Categoría:</span>
+                  <span className="text-gray-700 dark:text-gray-200 font-medium">{task.category}</span>
                 </div>
               </div>
 
               {/* Blocked reason */}
               {task.status === 'BLOCKED' && task.blocked_reason && (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-start gap-2">
+                <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded-xl p-3 flex items-start gap-2">
                   <AlertOctagon size={15} className="text-red-500 mt-0.5 shrink-0" />
                   <div>
-                    <p className="text-xs font-semibold text-red-700 mb-0.5">Motivo del bloqueo</p>
-                    <p className="text-sm text-red-600">{task.blocked_reason}</p>
+                    <p className="text-xs font-semibold text-red-700 dark:text-red-400 mb-0.5">Motivo del bloqueo</p>
+                    <p className="text-sm text-red-600 dark:text-red-300">{task.blocked_reason}</p>
                   </div>
                 </div>
               )}
 
               {/* Description */}
               <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-2">Descripción</h3>
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Descripción</h3>
                 {editing ? (
                   <textarea
-                    className="w-full border rounded-xl p-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300 resize-none"
+                    className="w-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-xl p-3 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 resize-none"
                     rows={4}
                     value={form.description}
                     onChange={(e) => setForm({ ...form, description: e.target.value })}
                   />
                 ) : (
-                  <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line">
                     {task.description || 'Sin descripción.'}
                   </p>
                 )}
@@ -227,28 +227,28 @@ export function TaskModal({ task, currentUser, taskHistory = [], onClose, onUpda
               {/* Links */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
                     <Link size={14} /> Links adjuntos
                   </h3>
                   <button
                     onClick={() => setShowAddLink(!showAddLink)}
-                    className="text-xs text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
+                    className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 flex items-center gap-1 font-medium"
                   >
                     <Plus size={12} /> Agregar
                   </button>
                 </div>
 
                 {showAddLink && (
-                  <div className="flex flex-col gap-2 mb-3 bg-gray-50 rounded-xl p-3">
+                  <div className="flex flex-col gap-2 mb-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl p-3">
                     <input
-                      className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                      className="border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
                       placeholder="URL (ej. https://figma.com/...)"
                       value={newLink.url}
                       onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
                       onKeyDown={(e) => e.key === 'Enter' && handleAddLink()}
                     />
                     <input
-                      className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                      className="border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
                       placeholder="Etiqueta (ej. Figma, Drive, GitHub...)"
                       value={newLink.label}
                       onChange={(e) => setNewLink({ ...newLink, label: e.target.value })}
@@ -260,7 +260,7 @@ export function TaskModal({ task, currentUser, taskHistory = [], onClose, onUpda
                         Guardar link
                       </button>
                       <button onClick={() => { setShowAddLink(false); setNewLink({ url: '', label: '' }) }}
-                        className="bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
+                        className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-600 dark:text-gray-300 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
                         Cancelar
                       </button>
                     </div>
@@ -273,19 +273,19 @@ export function TaskModal({ task, currentUser, taskHistory = [], onClose, onUpda
 
                 <div className="flex flex-wrap gap-2">
                   {(task.links || []).map((link) => (
-                    <div key={link.id} className="flex items-center gap-1.5 bg-indigo-50 border border-indigo-100 rounded-lg px-3 py-1.5 group">
+                    <div key={link.id} className="flex items-center gap-1.5 bg-indigo-50 dark:bg-indigo-900/40 border border-indigo-100 dark:border-indigo-800 rounded-lg px-3 py-1.5 group">
                       <a
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-xs font-medium text-indigo-700 hover:text-indigo-900 transition-colors"
+                        className="flex items-center gap-1.5 text-xs font-medium text-indigo-700 dark:text-indigo-300 hover:text-indigo-900 dark:hover:text-indigo-100 transition-colors"
                       >
                         <ExternalLink size={11} />
                         {link.label}
                       </a>
                       <button
                         onClick={() => handleRemoveLink(link.id)}
-                        className="text-indigo-300 hover:text-red-500 transition-colors ml-1 opacity-0 group-hover:opacity-100"
+                        className="text-indigo-300 dark:text-indigo-400 hover:text-red-500 transition-colors ml-1 opacity-0 group-hover:opacity-100"
                       >
                         <X size={11} />
                       </button>
@@ -354,7 +354,7 @@ export function TaskModal({ task, currentUser, taskHistory = [], onClose, onUpda
 
               {/* Comments */}
               <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3 flex items-center gap-2">
                   <MessageSquare size={15} />
                   Comentarios ({task.comments?.length || 0})
                 </h3>
@@ -367,14 +367,14 @@ export function TaskModal({ task, currentUser, taskHistory = [], onClose, onUpda
                     return (
                       <div key={c.id} className="flex gap-3">
                         <Avatar memberId={c.author_id} size="sm" />
-                        <div className="flex-1 bg-gray-50 rounded-xl p-3">
+                        <div className="flex-1 bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-700 rounded-xl p-3">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xs font-semibold text-gray-700">{author?.name.split(' ')[0]}</span>
+                            <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">{author?.name.split(' ')[0]}</span>
                             <span className="text-xs text-gray-400">
                               {format(new Date(c.created_at), 'd MMM HH:mm', { locale: es })}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600">{c.text}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">{c.text}</p>
                         </div>
                       </div>
                     )
@@ -382,7 +382,7 @@ export function TaskModal({ task, currentUser, taskHistory = [], onClose, onUpda
                 </div>
                 <div className="flex gap-2">
                   <input
-                    className="flex-1 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                    className="flex-1 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
                     placeholder="Escribe un comentario..."
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
@@ -391,7 +391,7 @@ export function TaskModal({ task, currentUser, taskHistory = [], onClose, onUpda
                   <button
                     onClick={handleComment}
                     disabled={!comment.trim()}
-                    className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-200 disabled:text-gray-400 text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors"
+                    className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-200 dark:disabled:bg-gray-700 disabled:text-gray-400 text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors cursor-pointer disabled:cursor-not-allowed"
                   >
                     Enviar
                   </button>
@@ -403,7 +403,7 @@ export function TaskModal({ task, currentUser, taskHistory = [], onClose, onUpda
           {/* ── TAB: HISTORIAL ── */}
           {tab === 'history' && (
             <div className="p-6">
-              <h3 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-4 flex items-center gap-2">
                 <Clock size={15} />
                 Historial de esta tarea
               </h3>
@@ -419,19 +419,19 @@ export function TaskModal({ task, currentUser, taskHistory = [], onClose, onUpda
                     return (
                       <div key={entry.id} className="flex items-start gap-3">
                         <span className="text-lg mt-0.5 shrink-0">{icon}</span>
-                        <div className="flex-1 bg-gray-50 rounded-xl p-3">
+                        <div className="flex-1 bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-700 rounded-xl p-3">
                           <div className="flex items-center gap-2 flex-wrap mb-0.5">
                             <Avatar memberId={entry.author_id} size="sm" />
-                            <span className="text-xs font-semibold text-gray-700">
+                            <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
                               {TEAM_MEMBERS.find((m) => m.id === entry.author_id)?.name.split(' ')[0]}
                             </span>
-                            <span className="text-xs text-gray-500">{entry.action}</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">{entry.action}</span>
                             <span className="ml-auto text-xs text-gray-400">
                               {format(new Date(entry.created_at), "d MMM 'a las' HH:mm", { locale: es })}
                             </span>
                           </div>
                           {entry.details && (
-                            <p className="text-xs text-gray-500 mt-1 leading-relaxed">{entry.details}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-300 mt-1 leading-relaxed">{entry.details}</p>
                           )}
                         </div>
                       </div>

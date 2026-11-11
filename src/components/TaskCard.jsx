@@ -17,8 +17,8 @@ export function TaskCard({ task, onClick, onToggleDone }) {
   return (
     <div
       onClick={onClick}
-      className={`bg-white rounded-xl border p-4 cursor-pointer hover:shadow-md transition-all duration-200 group
-        ${isDone ? 'border-green-200 bg-green-50/50' : 'border-gray-100 hover:border-indigo-200'}
+      className={`bg-white dark:bg-gray-800 rounded-xl border p-4 cursor-pointer hover:shadow-md transition-all duration-200 group
+        ${isDone ? 'border-green-200 dark:border-green-800/60 bg-green-50/50 dark:bg-green-950/20' : 'border-gray-100 dark:border-gray-700 hover:border-indigo-200 dark:hover:border-indigo-500/50'}
       `}
     >
       {/* Top row */}
@@ -31,12 +31,12 @@ export function TaskCard({ task, onClick, onToggleDone }) {
         >
           {isDone
             ? <CheckCircle2 size={18} className="text-green-500" />
-            : <Circle size={18} className="text-gray-300 group-hover:text-indigo-400 transition-colors" />
+            : <Circle size={18} className="text-gray-300 dark:text-gray-600 group-hover:text-indigo-400 transition-colors" />
           }
         </button>
 
         <p className={`flex-1 text-sm font-medium leading-snug line-clamp-2 transition-colors
-          ${isDone ? 'line-through text-gray-400' : 'text-gray-800 group-hover:text-indigo-700'}
+          ${isDone ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-800 dark:text-gray-100 group-hover:text-indigo-700 dark:group-hover:text-indigo-400'}
         `}>
           {task.title}
         </p>
@@ -55,7 +55,7 @@ export function TaskCard({ task, onClick, onToggleDone }) {
         <div className="flex items-center gap-3">
           {(task.links?.length || 0) > 0 && (
             <span
-              className="flex items-center gap-1 text-xs text-indigo-600 font-medium bg-indigo-50 px-1.5 py-0.5 rounded"
+              className="flex items-center gap-1 text-xs text-indigo-600 dark:text-indigo-400 font-medium bg-indigo-50 dark:bg-indigo-900/40 px-1.5 py-0.5 rounded"
               title={`${task.links.length} enlace${task.links.length > 1 ? 's' : ''} adjunto${task.links.length > 1 ? 's' : ''}`}
             >
               <LinkIcon size={11} />

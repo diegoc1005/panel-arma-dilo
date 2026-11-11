@@ -6,10 +6,10 @@ import { AddTaskModal } from '../components/AddTaskModal'
 import { TEAM_MEMBERS } from '../data/initialData'
 
 const COLUMNS = [
-  { key: 'TODO', label: 'Por hacer', color: 'bg-gray-100', dot: 'bg-gray-400', border: 'border-gray-300' },
-  { key: 'IN_PROGRESS', label: 'En progreso', color: 'bg-blue-50', dot: 'bg-blue-500', border: 'border-blue-300' },
-  { key: 'REVIEW', label: 'En revisión', color: 'bg-amber-50', dot: 'bg-amber-500', border: 'border-amber-300' },
-  { key: 'DONE', label: 'Hecho', color: 'bg-green-50', dot: 'bg-green-500', border: 'border-green-300' },
+  { key: 'TODO', label: 'Por hacer', color: 'bg-gray-100 dark:bg-gray-850 dark:bg-gray-800/60', dot: 'bg-gray-400 dark:bg-gray-500', border: 'border-gray-300 dark:border-gray-600' },
+  { key: 'IN_PROGRESS', label: 'En progreso', color: 'bg-blue-50 dark:bg-blue-950/30', dot: 'bg-blue-500', border: 'border-blue-300 dark:border-blue-800' },
+  { key: 'REVIEW', label: 'En revisión', color: 'bg-amber-50 dark:bg-amber-950/30', dot: 'bg-amber-500', border: 'border-amber-300 dark:border-amber-800' },
+  { key: 'DONE', label: 'Hecho', color: 'bg-green-50 dark:bg-green-950/30', dot: 'bg-green-500', border: 'border-green-300 dark:border-green-800' },
 ]
 
 export function Kanban({ tasks, history, currentUser, onUpdate, onAdd, onComment }) {
@@ -99,18 +99,18 @@ export function Kanban({ tasks, history, currentUser, onUpdate, onAdd, onComment
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Tablero Kanban</h1>
-          <p className="text-gray-500 text-sm mt-1">Arrastra las tarjetas entre columnas para cambiar su estado</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Tablero Kanban</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Arrastra las tarjetas entre columnas para cambiar su estado</p>
         </div>
         <div className="flex items-center gap-3">
           {/* Filtro por miembro */}
-          <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-xl p-1">
+          <div className="flex items-center gap-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-1 shadow-sm">
             <button
               onClick={() => setFilterMember('all')}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 filterMember === 'all'
-                  ? 'bg-indigo-600 text-white'
-                  : 'text-gray-500 hover:bg-gray-100'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
               Todos
@@ -119,8 +119,8 @@ export function Kanban({ tasks, history, currentUser, onUpdate, onAdd, onComment
               onClick={() => setFilterMember('me')}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 filterMember === 'me'
-                  ? 'bg-indigo-600 text-white'
-                  : 'text-gray-500 hover:bg-gray-100'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
               Mis tareas
@@ -132,7 +132,7 @@ export function Kanban({ tasks, history, currentUser, onUpdate, onAdd, onComment
                 title={m.name}
                 className={`w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold transition-all ${
                   filterMember === String(m.id)
-                    ? 'ring-2 ring-offset-1 ring-indigo-500 scale-110'
+                    ? 'ring-2 ring-offset-1 ring-indigo-500 scale-110 shadow-sm'
                     : 'opacity-60 hover:opacity-100'
                 }`}
                 style={{ backgroundColor: m.color }}
@@ -168,8 +168,8 @@ export function Kanban({ tasks, history, currentUser, onUpdate, onAdd, onComment
               {/* Column header */}
               <div className="flex items-center gap-2 mb-4">
                 <div className={`w-2.5 h-2.5 rounded-full ${col.dot}`} />
-                <h3 className="font-semibold text-gray-700 text-sm">{col.label}</h3>
-                <span className="ml-auto bg-white text-gray-500 text-xs font-bold px-2 py-0.5 rounded-full">
+                <h3 className="font-semibold text-gray-700 dark:text-gray-200 text-sm">{col.label}</h3>
+                <span className="ml-auto bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold px-2 py-0.5 rounded-full shadow-xs">
                   {tasksByStatus[col.key]?.length || 0}
                 </span>
               </div>
@@ -196,7 +196,7 @@ export function Kanban({ tasks, history, currentUser, onUpdate, onAdd, onComment
                 {tasksByStatus[col.key]?.length === 0 && (
                   <div
                     className={`text-center py-8 text-xs rounded-xl border-2 border-dashed transition-colors
-                      ${isOver ? `${col.border} text-gray-500` : 'border-gray-200 text-gray-400'}
+                      ${isOver ? `${col.border} text-gray-500 dark:text-gray-400` : 'border-gray-200 dark:border-gray-700/80 text-gray-400 dark:text-gray-500'}
                     `}
                   >
                     {isOver ? 'Suelta aquí' : 'Sin tareas'}

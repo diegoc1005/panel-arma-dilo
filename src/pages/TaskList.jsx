@@ -100,12 +100,12 @@ export function TaskList({ tasks, history, currentUser, onUpdate, onAdd, onDelet
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Lista de tareas</h1>
-          <p className="text-gray-500 text-sm mt-1">{filtered.length} tareas</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Lista de tareas</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{filtered.length} tareas</p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors"
+          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors cursor-pointer"
         >
           <Plus size={16} />
           Nueva tarea
@@ -113,23 +113,23 @@ export function TaskList({ tasks, history, currentUser, onUpdate, onAdd, onDelet
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-4 flex flex-wrap gap-3">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-4 flex flex-wrap gap-3 shadow-sm">
         <div className="relative flex-1 min-w-48">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
-            className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            className="w-full pl-9 pr-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300"
             placeholder="Buscar tarea..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-xl">
+        <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700/80 p-1 rounded-xl">
           <button
             onClick={() => setFilterMember('all')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               filterMember === 'all'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-500 hover:text-gray-900'
+                ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
             }`}
           >
             Todos
@@ -139,14 +139,14 @@ export function TaskList({ tasks, history, currentUser, onUpdate, onAdd, onDelet
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               filterMember === 'me'
                 ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-gray-500 hover:text-gray-900'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
             }`}
           >
             Mis tareas
           </button>
         </div>
         <select
-          className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
           value={filterMember}
           onChange={(e) => setFilterMember(e.target.value)}
         >
@@ -157,7 +157,7 @@ export function TaskList({ tasks, history, currentUser, onUpdate, onAdd, onDelet
           ))}
         </select>
         <select
-          className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
         >
@@ -168,7 +168,7 @@ export function TaskList({ tasks, history, currentUser, onUpdate, onAdd, onDelet
           <option value="DONE">Hecho</option>
         </select>
         <select
-          className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
           value={filterPriority}
           onChange={(e) => setFilterPriority(e.target.value)}
         >
@@ -178,7 +178,7 @@ export function TaskList({ tasks, history, currentUser, onUpdate, onAdd, onDelet
           <option value="LOW">Baja</option>
         </select>
         <select
-          className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
         >
@@ -231,10 +231,10 @@ export function TaskList({ tasks, history, currentUser, onUpdate, onAdd, onDelet
       )}
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden shadow-sm">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-50 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
+            <tr className="bg-gray-50 dark:bg-gray-700/50 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
               <th className="px-4 py-3 w-8">
                 <input
                   type="checkbox"
@@ -252,7 +252,7 @@ export function TaskList({ tasks, history, currentUser, onUpdate, onAdd, onDelet
               <th className="px-4 py-3"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-50">
+          <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
             {filtered.map((task) => {
               const isOverdue =
                 task.due_date &&
@@ -262,7 +262,7 @@ export function TaskList({ tasks, history, currentUser, onUpdate, onAdd, onDelet
               return (
                 <tr
                   key={task.id}
-                  className={`hover:bg-gray-50 cursor-pointer transition-colors ${selected.has(task.id) ? 'bg-indigo-50' : ''}`}
+                  className={`hover:bg-gray-50 dark:hover:bg-gray-700/40 cursor-pointer transition-colors ${selected.has(task.id) ? 'bg-indigo-50 dark:bg-indigo-900/30' : ''}`}
                   onClick={() => setSelectedTask(task)}
                 >
                   <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
@@ -285,15 +285,15 @@ export function TaskList({ tasks, history, currentUser, onUpdate, onAdd, onDelet
                       >
                         {task.status === 'DONE'
                           ? <CheckCircle2 size={17} className="text-green-500" />
-                          : <Circle size={17} className="text-gray-300 hover:text-green-400 transition-colors" />
+                          : <Circle size={17} className="text-gray-300 dark:text-gray-600 hover:text-green-400 transition-colors" />
                         }
                       </button>
-                      <p className={`font-medium leading-snug ${task.status === 'DONE' ? 'line-through text-gray-400' : 'text-gray-800'}`}>
+                      <p className={`font-medium leading-snug ${task.status === 'DONE' ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-800 dark:text-gray-100'}`}>
                         {task.title}
                       </p>
                       {(task.links?.length || 0) > 0 && (
                         <span
-                          className="flex items-center gap-0.5 text-xs text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded shrink-0 font-medium"
+                          className="flex items-center gap-0.5 text-xs text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/40 px-1.5 py-0.5 rounded shrink-0 font-medium"
                           title={`${task.links.length} enlace${task.links.length > 1 ? 's' : ''} adjunto${task.links.length > 1 ? 's' : ''}`}
                         >
                           <LinkIcon size={10} />

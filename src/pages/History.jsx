@@ -31,14 +31,14 @@ export function History({ history, tasks }) {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Historial de cambios</h1>
-        <p className="text-gray-500 text-sm mt-1">{history.length} eventos registrados</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Historial de cambios</h1>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{history.length} eventos registrados</p>
       </div>
 
       {history.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center">
-          <Clock size={40} className="text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-400">Sin actividad registrada aún. Los cambios aparecerán aquí.</p>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-12 text-center">
+          <Clock size={40} className="text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+          <p className="text-gray-400 dark:text-gray-500">Sin actividad registrada aún. Los cambios aparecerán aquí.</p>
         </div>
       ) : (
         <div className="space-y-6">
@@ -47,7 +47,7 @@ export function History({ history, tasks }) {
               <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3 capitalize">
                 {date}
               </h2>
-              <div className="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-50 shadow-sm">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 divide-y divide-gray-50 dark:divide-gray-700 shadow-sm">
                 {entries.map((entry) => {
                   const author = TEAM_MEMBERS.find((m) => m.id === entry.author_id)
                   const icon = ACTION_ICONS[entry.action] || '📌'
@@ -57,11 +57,11 @@ export function History({ history, tasks }) {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                           <Avatar memberId={entry.author_id} size="sm" />
-                          <span className="text-sm font-semibold text-gray-800">{author?.name.split(' ')[0]}</span>
-                          <span className="text-sm text-gray-500">{entry.action}</span>
+                          <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{author?.name.split(' ')[0]}</span>
+                          <span className="text-sm text-gray-500 dark:text-gray-400">{entry.action}</span>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-                          <span className="font-medium text-gray-700">{getTaskTitle(entry.task_id)}</span>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
+                          <span className="font-medium text-gray-700 dark:text-gray-300">{getTaskTitle(entry.task_id)}</span>
                           {entry.details && ` — ${entry.details}`}
                         </p>
                       </div>
