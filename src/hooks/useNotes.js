@@ -12,20 +12,23 @@ export function useNotes() {
       .order('created_at', { ascending: false })
       .then(({ data }) => setNotes(data ?? []))
 
+    const channelName = `notes-realtime-${Math.random().toString(36).slice(2)}`
     const channel = supabase
-      .channel('notes-realtime')
+      .channel(channelName)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notes' }, (p) => {
-        setNotes((prev) => prev.find((n) => n.id === p.new.id) ? prev : [p.new, ...prev])
+        setNotes((prev) => (prev.find((n) => n.id === p.new.id) ? prev : [p.new, ...prev]))
       })
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'notes' }, (p) => {
-        setNotes((prev) => prev.map((n) => n.id === p.new.id ? p.new : n))
+        setNotes((prev) => prev.map((n) => (n.id === p.new.id ? p.new : n)))
       })
       .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'notes' }, (p) => {
         setNotes((prev) => prev.filter((n) => n.id !== p.old.id))
       })
       .subscribe()
 
-    return () => supabase.removeChannel(channel)
+    return () => {
+      supabase.removeChannel(channel)
+    }
   }, [])
 
   const addNote = useCallback(async (content, authorId) => {

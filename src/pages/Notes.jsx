@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Pin, Trash2, Plus, Edit2, Check, X } from 'lucide-react'
-import { useNotes as useNotesHook } from '../hooks/useNotes'
 import { TEAM_MEMBERS } from '../data/initialData'
 import { Avatar } from '../components/Avatar'
 import { format } from 'date-fns'
@@ -8,27 +7,19 @@ import { es } from 'date-fns/locale'
 
 export function Notes({
   currentUser,
-  notes: propNotes,
-  onAdd: propAdd,
-  onUpdate: propUpdate,
-  onDelete: propDelete,
-  onTogglePin: propTogglePin,
+  notes = [],
+  onAdd,
+  onUpdate,
+  onDelete,
+  onTogglePin,
 }) {
-  // Si no se reciben por props, usamos el hook local
-  const localNotes = useNotesHook()
-  const notes = propNotes ?? localNotes.notes ?? []
-  const addNote = propAdd ?? localNotes.addNote
-  const updateNote = propUpdate ?? localNotes.updateNote
-  const deleteNote = propDelete ?? localNotes.deleteNote
-  const togglePin = propTogglePin ?? localNotes.togglePin
-
   const [newText, setNewText] = useState('')
   const [editingId, setEditingId] = useState(null)
   const [editText, setEditText] = useState('')
 
   const handleAdd = async () => {
-    if (!newText.trim() || !addNote) return
-    await addNote(newText.trim(), currentUser)
+    if (!newText.trim() || !onAdd) return
+    await onAdd(newText.trim(), currentUser)
     setNewText('')
   }
 
@@ -38,8 +29,8 @@ export function Notes({
   }
 
   const saveEdit = async (id) => {
-    if (!editText.trim() || !updateNote) return
-    await updateNote(id, { content: editText.trim() })
+    if (!editText.trim() || !onUpdate) return
+    await onUpdate(id, { content: editText.trim() })
     setEditingId(null)
   }
 
@@ -108,8 +99,8 @@ export function Notes({
                 onStartEdit={() => startEdit(note)}
                 onSaveEdit={() => saveEdit(note.id)}
                 onCancelEdit={() => setEditingId(null)}
-                onDelete={() => deleteNote?.(note.id)}
-                onTogglePin={() => togglePin?.(note)}
+                onDelete={() => onDelete?.(note.id)}
+                onTogglePin={() => onTogglePin?.(note)}
               />
             ))}
           </div>
@@ -134,8 +125,8 @@ export function Notes({
                 onStartEdit={() => startEdit(note)}
                 onSaveEdit={() => saveEdit(note.id)}
                 onCancelEdit={() => setEditingId(null)}
-                onDelete={() => deleteNote?.(note.id)}
-                onTogglePin={() => togglePin?.(note)}
+                onDelete={() => onDelete?.(note.id)}
+                onTogglePin={() => onTogglePin?.(note)}
               />
             ))}
           </div>
@@ -172,11 +163,10 @@ function NoteCard({
 
   return (
     <div
-      className={`bg-white dark:bg-gray-800 rounded-2xl border shadow-sm p-4 transition-all ${
-        note.pinned
+      className={`bg-white dark:bg-gray-800 rounded-2xl border shadow-sm p-4 transition-all ${note.pinned
           ? 'border-amber-200 dark:border-amber-700 bg-amber-50/40 dark:bg-amber-900/10'
           : 'border-gray-100 dark:border-gray-700'
-      }`}
+        }`}
     >
       {editing ? (
         <div className="space-y-2">
@@ -225,11 +215,10 @@ function NoteCard({
               <button
                 onClick={onTogglePin}
                 title={note.pinned ? 'Desfijar' : 'Fijar nota'}
-                className={`p-1.5 rounded-lg transition-colors ${
-                  note.pinned
+                className={`p-1.5 rounded-lg transition-colors ${note.pinned
                     ? 'text-amber-500 bg-amber-50 dark:bg-amber-900/30'
                     : 'text-gray-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-gray-700'
-                }`}
+                  }`}
               >
                 <Pin size={14} />
               </button>
