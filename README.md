@@ -47,9 +47,9 @@ VITE_SUPABASE_ANON_KEY=tu-clave-aqui
 | Nombre | Rol |
 |--------|-----|
 | Córdova García Diego | Project Manager |
-| Frías Hernández Edmond Antonio | Arquitecto de Software |
+| Robles Cancino Arturo Andres | Arquitecto de Software |
 | Alfaro Carreto Irving Alberto | Analista de Requerimientos |
-| Robles Cancino Arturo Andres | Programador |
+| Frías Hernández Edmond Antonio | Desarrollador |
 | Gutiérrez Martínez Esmeralda Rubí | Diseñadora |
 | Hernández Garcés Abigail | Tester |
 
